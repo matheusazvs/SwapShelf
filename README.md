@@ -41,14 +41,24 @@ La primera versión utiliza una arquitectura basada en dos servicios independien
 
 Cada servicio expondrá una API REST. PostgreSQL almacenará los datos persistentes. Docker y Docker Compose facilitarán la ejecución local de los componentes.
 
-```
+
+```mermaid
 flowchart TD
-    U[Usuario] --> API[API REST]
-    API --> C[Catalog Service]
-    API --> E[Exchange Service]
-    C --> DB[(PostgreSQL)]
-    E --> DB
+    U["Usuario"]
+    API["API REST - FastAPI"]
+    C["Catalog Service"]
+    E["Exchange Service"]
+    DB1[("PostgreSQL - Catalogo")]
+    DB2[("PostgreSQL - Intercambios")]
+
+    U -->|"HTTPS / JSON"| API
+    API -->|"HTTP / REST / JSON"| C
+    API -->|"HTTP / REST / JSON"| E
+    C -->|"SQL"| DB1
+    E -->|"SQL"| DB2
+    C <-->|"HTTP / REST / JSON"| E
 ```
+
 
 La arquitectura podrá evolucionar hacia despliegues en Kubernetes, infraestructura como código, integración y entrega continuas y monitorización.
 
