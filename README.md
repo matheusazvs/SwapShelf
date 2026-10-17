@@ -120,13 +120,21 @@ Estas características describen los objetivos de la solución cloud; su impleme
 
 ## 9. Actores según NIST SP 500-292
 
-- **Consumidor cloud:** el equipo del proyecto que utiliza los recursos cloud para ejecutar SwapShelf.
-- **Proveedor cloud:** la empresa que proporciona computación, almacenamiento y otros servicios de infraestructura.
-- **Broker cloud:** no se contempla inicialmente; podría incorporarse en el futuro para intermediar entre diferentes proveedores.
-- **Auditor cloud:** una entidad independiente que podría evaluar la seguridad, el rendimiento y el cumplimiento.
-- **Operador cloud:** el equipo responsable de desplegar, configurar, mantener y supervisar los servicios.
+El modelo de referencia NIST SP 500-292 identifica los actores que participan en el ecosistema cloud. En SwapShelf, estos roles se interpretan de la siguiente manera:
 
-Los usuarios finales son consumidores de SwapShelf, pero no necesariamente consumidores directos de la infraestructura cloud.
+- **Consumidor cloud:** el equipo de desarrollo utiliza los recursos cloud para desplegar y ejecutar SwapShelf. Los usuarios finales consumen las funcionalidades de la plataforma, pero no necesariamente utilizan directamente los servicios de infraestructura cloud. **Impacto económico:** los costes de infraestructura y servicios contratados deben ajustarse al presupuesto del proyecto. La automatización puede reducir el esfuerzo manual y los costes operativos.
+
+- **Proveedor cloud:** la empresa que proporciona recursos de computación, almacenamiento, redes y, cuando corresponda, servicios gestionados. **Impacto económico:** ofrece un modelo de pago según los recursos contratados o consumidos, lo que puede reducir la inversión inicial en hardware. Sin embargo, un crecimiento no controlado del consumo puede aumentar los costes recurrentes.
+
+- **Broker cloud (intermediario):** no se contempla en la versión inicial de SwapShelf. En el futuro, podría ayudar a comparar, combinar o gestionar servicios de diferentes proveedores. **Impacto económico:** podría facilitar la selección de servicios con una mejor relación entre precio y prestaciones, aunque añadiría posibles costes de intermediación y complejidad de gestión.
+
+- **Auditor cloud:** una entidad independiente podría evaluar la seguridad, el rendimiento, la gestión de datos y el cumplimiento de los requisitos aplicables. **Impacto económico:** las auditorías pueden generar costes de evaluación y corrección, pero también ayudan a reducir riesgos, evitar incidentes y mejorar la confianza en la plataforma.
+
+- **Operador cloud:** en el contexto operativo del proyecto, es el equipo responsable de desplegar, configurar, mantener y supervisar los servicios. Esta función operativa se distingue de los roles formales del modelo NIST. **Impacto económico:** la automatización de despliegues, pruebas y monitorización puede reducir el tiempo de mantenimiento y los errores humanos, aunque requiere una inversión inicial de desarrollo y configuración.
+
+En conclusión, el modelo cloud permite a SwapShelf comenzar con una infraestructura ajustada a sus necesidades y aumentar su capacidad a medida que crezca el número de usuarios. La viabilidad económica dependerá de controlar el consumo de recursos, automatizar las operaciones y revisar periódicamente los costes.
+
+**Nota sobre el modelo de referencia:** NIST SP 500-292 denomina *Cloud Carrier* al actor encargado de proporcionar conectividad y transporte de servicios cloud. En este proyecto se mantiene el término «Operador cloud» utilizado en el enunciado de la asignatura para describir la responsabilidad operativa del equipo.
 
 ## 10. Seguridad y fiabilidad
 
