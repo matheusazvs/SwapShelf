@@ -108,6 +108,68 @@ Ejemplo de solicitud para crear un artículo:
 
 Las operaciones de intercambio seguirán reglas de negocio para impedir transiciones de estado inválidas y evitar movimientos duplicados de créditos.
 
+### Ejemplo de solicitud para añadir un deseo
+
+`POST /wishlists`
+
+```json
+{
+  "item_title": "El principito",
+  "category": "book"
+}
+```
+
+### Ejemplo de consulta de coincidencias
+
+`GET /matches`
+
+Esta operación utiliza los criterios de la lista de deseos y los artículos disponibles del usuario para encontrar posibles coincidencias. No requiere un cuerpo JSON en la solicitud.
+
+Ejemplo de respuesta:
+
+```json
+{
+  "matches": [
+    {
+      "item_id": 12,
+      "title": "El principito",
+      "category": "book",
+      "condition": "good"
+    }
+  ]
+}
+```
+
+### Ejemplo de solicitud para crear una propuesta de intercambio
+
+`POST /exchanges`
+
+```json
+{
+  "offered_item_id": 12,
+  "requested_item_id": 25,
+  "message": "¿Te interesa intercambiar estos artículos?"
+}
+```
+
+### Ejemplo de solicitud para confirmar un intercambio
+
+`POST /exchanges/{id}/confirm`
+
+```json
+{
+  "confirmation": true
+}
+```
+
+### Consideraciones sobre la API
+
+- Las solicitudes y respuestas que contienen datos utilizarán JSON y el tipo de contenido `application/json`.
+- Los endpoints que modifican datos requerirán validación de campos y autorización del usuario correspondiente.
+- Las respuestas utilizarán códigos HTTP adecuados, como `200 OK`, `201 Created`, `400 Bad Request`, `401 Unauthorized`, `404 Not Found` y `422 Unprocessable Entity`, según el resultado de la operación.
+- Los campos mostrados son ejemplos del contrato previsto de la API y podrán ajustarse durante la implementación.
+
+
 ## 8. Características del cloud computing según NIST SP 800-145
 
 - **Autoservicio bajo demanda:** los usuarios gestionan sus anuncios y listas de deseos sin intervención manual del administrador. La infraestructura podrá aprovisionarse mediante automatización.
