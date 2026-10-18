@@ -228,3 +228,25 @@ Desde el punto de vista técnico, el uso de servicios contenerizados y recursos 
 
 - NIST SP 800-145: The NIST Definition of Cloud Computing.
 - NIST SP 500-292: NIST Cloud Computing Reference Architecture.
+
+  ## 14. Estrategia de Git
+
+La rama `main` contendrá la versión estable del proyecto. Las nuevas funcionalidades y correcciones se desarrollarán en ramas independientes con nombres descriptivos, por ejemplo:
+
+- `feature/catalog-api`
+- `feature/exchange-workflow`
+- `fix/item-validation`
+- `docs/readme-update`
+
+Los cambios se integrarán en `main` mediante Pull Requests. Antes de integrar una modificación, se revisará el código y se comprobarán las pruebas correspondientes.
+
+Se utilizarán commits semánticos para identificar el propósito de cada cambio:
+
+- `feat:` nueva funcionalidad.
+- `fix:` corrección de errores.
+- `docs:` cambios en la documentación.
+- `refactor:` reorganización del código sin cambiar su comportamiento.
+- `test:` incorporación o modificación de pruebas.
+- `ci:` cambios en la integración continua.
+
+Las Issues de GitHub se utilizarán para registrar las historias de usuario y las tareas. Cada Pull Request deberá estar relacionado con la Issue correspondiente cuando sea aplicable.
