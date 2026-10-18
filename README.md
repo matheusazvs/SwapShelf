@@ -226,8 +226,8 @@ Desde el punto de vista técnico, el uso de servicios contenerizados y recursos 
 
 ## 13. Referencias
 
-- NIST SP 800-145: The NIST Definition of Cloud Computing.
-- NIST SP 500-292: NIST Cloud Computing Reference Architecture.
+- Mell, P. y Grance, T. (2011). [NIST SP 800-145: The NIST Definition of Cloud Computing](https://csrc.nist.gov/pubs/sp/800/145/final). National Institute of Standards and Technology (NIST).
+- Liu, F. et al. (2011). [NIST SP 500-292: NIST Cloud Computing Reference Architecture](https://www.nist.gov/publications/nist-cloud-computing-reference-architecture). National Institute of Standards and Technology (NIST).
 
   ## 14. Estrategia de Git
 
