@@ -1,0 +1,79 @@
+services:
+  catalog:
+    build:
+      context: .
+      dockerfile: services/catalog/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      DB_HOST: catalog-db
+      DB_PORT: 5432
+      DB_USER: ${CATALOG_DB_USER:-catalog_user}
+      DB_PASSWORD: ${CATALOG_DB_PASSWORD:-change_me_catalog}
+      DB_NAME: ${CATALOG_DB_NAME:-catalog_db}
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+    networks:
+      - catalog-network
+      - services-network
+
+  exchange:
+    build:
+      context: .
+      dockerfile: services/exchange/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      DB_HOST: exchange-db
+      DB_PORT: 5432
+      DB_USER: ${EXCHANGE_DB_USER:-exchange_user}
+      DB_PASSWORD: ${EXCHANGE_DB_PASSWORD:-change_me_exchange}
+      DB_NAME: ${EXCHANGE_DB_NAME:-exchange_db}
+    depends_on:
+      exchange-db:
+        condition: service_healthy
+    networks:
+      - exchange-network
+      - services-network
+
+  catalog-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${CATALOG_DB_USER:-catalog_user}
+      POSTGRES_PASSWORD: ${CATALOG_DB_PASSWORD:-change_me_catalog}
+      POSTGRES_DB: ${CATALOG_DB_NAME:-catalog_db}
+    volumes:
+      - catalog_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - catalog-network
+
+  exchange-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${EXCHANGE_DB_USER:-exchange_user}
+      POSTGRES_PASSWORD: ${EXCHANGE_DB_PASSWORD:-change_me_exchange}
+      POSTGRES_DB: ${EXCHANGE_DB_NAME:-exchange_db}
+    volumes:
+      - exchange_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - exchange-network
+
+volumes:
+  catalog_data:
+  exchange_data:
+
+networks:
+  catalog-network:
+  exchange-network:
+  services-network:
