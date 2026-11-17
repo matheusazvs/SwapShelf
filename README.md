@@ -41,7 +41,6 @@ La primera versión utiliza una arquitectura basada en dos servicios independien
 
 Cada servicio expondrá una API REST. PostgreSQL almacenará los datos persistentes. Docker y Docker Compose facilitarán la ejecución local de los componentes.
 
-
 ```mermaid
 flowchart TD
     U["Usuario"]
@@ -59,7 +58,6 @@ flowchart TD
     C <-->|"HTTP / REST / JSON"| E
 ```
 
-
 La arquitectura podrá evolucionar hacia despliegues en Kubernetes, infraestructura como código, integración y entrega continuas y monitorización.
 
 ## 6. Tecnologías
@@ -75,14 +73,14 @@ La arquitectura podrá evolucionar hacia despliegues en Kubernetes, infraestruct
 
 ### Catalog Service
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| POST | `/items` | Crear un artículo |
-| GET | `/items` | Consultar artículos |
-| GET | `/items/{id}` | Consultar un artículo |
-| PATCH | `/items/{id}` | Actualizar un artículo |
-| POST | `/wishlists` | Añadir un deseo a la lista |
-| GET | `/matches` | Consultar coincidencias |
+| Método | Endpoint      | Descripción                |
+| ------ | ------------- | -------------------------- |
+| POST   | `/items`      | Crear un artículo          |
+| GET    | `/items`      | Consultar artículos        |
+| GET    | `/items/{id}` | Consultar un artículo      |
+| PATCH  | `/items/{id}` | Actualizar un artículo     |
+| POST   | `/wishlists`  | Añadir un deseo a la lista |
+| GET    | `/matches`    | Consultar coincidencias    |
 
 Ejemplo de solicitud para crear un artículo:
 
@@ -97,14 +95,14 @@ Ejemplo de solicitud para crear un artículo:
 
 ### Exchange Service
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| POST | `/exchanges` | Crear una propuesta |
-| GET | `/exchanges/{id}` | Consultar una propuesta |
-| POST | `/exchanges/{id}/accept` | Aceptar una propuesta |
-| POST | `/exchanges/{id}/confirm` | Confirmar la finalización |
-| POST | `/exchanges/{id}/cancel` | Cancelar una propuesta |
-| GET | `/users/me/credits` | Consultar los créditos del usuario |
+| Método | Endpoint                  | Descripción                        |
+| ------ | ------------------------- | ---------------------------------- |
+| POST   | `/exchanges`              | Crear una propuesta                |
+| GET    | `/exchanges/{id}`         | Consultar una propuesta            |
+| POST   | `/exchanges/{id}/accept`  | Aceptar una propuesta              |
+| POST   | `/exchanges/{id}/confirm` | Confirmar la finalización          |
+| POST   | `/exchanges/{id}/cancel`  | Cancelar una propuesta             |
+| GET    | `/users/me/credits`       | Consultar los créditos del usuario |
 
 Las operaciones de intercambio seguirán reglas de negocio para impedir transiciones de estado inválidas y evitar movimientos duplicados de créditos.
 
@@ -169,7 +167,6 @@ Ejemplo de respuesta:
 - Las respuestas utilizarán códigos HTTP adecuados, como `200 OK`, `201 Created`, `400 Bad Request`, `401 Unauthorized`, `404 Not Found` y `422 Unprocessable Entity`, según el resultado de la operación.
 - Los campos mostrados son ejemplos del contrato previsto de la API y podrán ajustarse durante la implementación.
 
-
 ## 8. Características del cloud computing según NIST SP 800-145
 
 - **Autoservicio bajo demanda:** los usuarios gestionan sus anuncios y listas de deseos sin intervención manual del administrador. La infraestructura podrá aprovisionarse mediante automatización.
@@ -196,7 +193,7 @@ El modelo de referencia NIST SP 500-292 identifica los actores que participan en
 
 En conclusión, el modelo cloud permite a SwapShelf comenzar con una infraestructura ajustada a sus necesidades y aumentar su capacidad a medida que crezca el número de usuarios. La viabilidad económica dependerá de controlar el consumo de recursos, automatizar las operaciones y revisar periódicamente los costes.
 
-**Nota sobre el modelo de referencia:** NIST SP 500-292 denomina *Cloud Carrier* al actor encargado de proporcionar conectividad y transporte de servicios cloud. En este proyecto se mantiene el término «Operador cloud» utilizado en el enunciado de la asignatura para describir la responsabilidad operativa del equipo.
+**Nota sobre el modelo de referencia:** NIST SP 500-292 denomina _Cloud Carrier_ al actor encargado de proporcionar conectividad y transporte de servicios cloud. En este proyecto se mantiene el término «Operador cloud» utilizado en el enunciado de la asignatura para describir la responsabilidad operativa del equipo.
 
 ## 10. Seguridad y fiabilidad
 
@@ -214,22 +211,52 @@ Los créditos internos requerirán operaciones consistentes e idempotentes para 
 
 ## 11. Organización del desarrollo
 
-El trabajo se organizará mediante GitHub Issues, GitHub Projects y Pull Requests. Las funcionalidades se dividirán en historias de usuario con criterios de aceptación.
+El trabajo se organiza mediante GitHub Issues, GitHub Projects y Pull Requests. Las funcionalidades se dividen en historias de usuario con criterios de aceptación.
 
-La integración continua ejecutará pruebas automatizadas. En los siguientes hitos se incorporarán contenedores, infraestructura como código, despliegue automatizado y observabilidad.
+La integración continua se gestiona mediante GitHub Actions, que ejecuta comprobaciones de calidad, pruebas unitarias y de integración, y la construcción y publicación de imágenes Docker.
 
-## 12. Impacto económico
+El desarrollo sigue una estrategia basada en ramas independientes, revisión de cambios mediante Pull Requests y commits semánticos.
+
+## 12. Empaquetado Cloud Native e integración continua
+
+La aplicación se ha preparado para ejecutarse en contenedores Docker mediante dos imágenes independientes:
+
+- **Catalog Service:** imagen `ghcr.io/matheusazvs/swapshelf-catalog`.
+- **Exchange Service:** imagen `ghcr.io/matheusazvs/swapshelf-exchange`.
+
+Cada servicio dispone de un Dockerfile multi-stage basado en Python 3.12 slim y se ejecuta con un usuario no privilegiado.
+
+El entorno local se gestiona mediante Docker Compose e incluye cuatro contenedores:
+
+- Catalog Service.
+- Exchange Service.
+- Base de datos PostgreSQL para Catalog.
+- Base de datos PostgreSQL para Exchange.
+
+Cada base de datos dispone de su propio volumen persistente y red aislada. Las variables de configuración se gestionan mediante un fichero `.env`, con un `.env.example` como plantilla.
+
+Se ha configurado un workflow de GitHub Actions (`.github/workflows/ci.yml`) que ejecuta:
+
+- Análisis estático del código con Ruff.
+- Validación de los Dockerfiles con Hadolint.
+- Pruebas unitarias.
+- Pruebas de integración con Docker Compose.
+- Construcción y publicación de las imágenes Docker en GitHub Container Registry (GHCR).
+
+Las imágenes se publican utilizando etiquetas asociadas a la rama, al commit y a versiones semánticas cuando corresponda.
+
+## 13. Impacto económico
 
 SwapShelf puede prolongar la vida útil de libros y juegos, reducir la necesidad de comprar productos nuevos y facilitar el acceso a artículos de segunda mano.
 
 Desde el punto de vista técnico, el uso de servicios contenerizados y recursos cloud escalables permitirá adaptar la capacidad a la demanda. Los costes dependerán del proveedor, del consumo y de los recursos desplegados.
 
-## 13. Referencias
+## 14. Referencias
 
 - Mell, P. y Grance, T. (2011). [NIST SP 800-145: The NIST Definition of Cloud Computing](https://csrc.nist.gov/pubs/sp/800/145/final). National Institute of Standards and Technology (NIST).
 - Liu, F. et al. (2011). [NIST SP 500-292: NIST Cloud Computing Reference Architecture](https://www.nist.gov/publications/nist-cloud-computing-reference-architecture). National Institute of Standards and Technology (NIST).
 
-  ## 14. Estrategia de Git
+## 15. Estrategia de Git
 
 La rama `main` contendrá la versión estable del proyecto. Las nuevas funcionalidades y correcciones se desarrollarán en ramas independientes con nombres descriptivos, por ejemplo:
 
