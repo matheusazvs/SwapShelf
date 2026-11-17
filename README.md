@@ -226,6 +226,8 @@ La aplicación se ha preparado para ejecutarse en contenedores Docker mediante d
 
 Cada servicio dispone de un Dockerfile multi-stage basado en Python 3.12 slim y se ejecuta con un usuario no privilegiado.
 
+Se ha elegido la imagen `python:3.12-slim` porque proporciona el entorno de ejecución de Python necesario con un tamaño reducido respecto a la imagen estándar. Esta elección contribuye a reducir el tamaño de las imágenes y la superficie potencial de ataque, manteniendo la compatibilidad con las dependencias del proyecto.
+
 El entorno local se gestiona mediante Docker Compose e incluye cuatro contenedores:
 
 - Catalog Service.
